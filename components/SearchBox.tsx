@@ -4,7 +4,7 @@ interface SearchBoxProps {
   label: string;
 }
 
-const SearchBox = ({ label }: SearchBoxProps) => {
+const SearchBox: React.FC<SearchBoxProps> = ({ label }) => {
   return (
     <div>
       <form className="bg-white p-2 rounded-full flex items-center">

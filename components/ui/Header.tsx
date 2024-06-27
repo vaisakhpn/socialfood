@@ -4,7 +4,7 @@ import NavBarActionMenu from "../NavBarActionMenu";
 
 export default function Header() {
   return (
-    <div className="w-full  bg-header p-1">
+    <div className="fixed top-0 left-0 w-full bg-header p-1 z-50 shadow-md">
       <header className="header">
         <Link className="text-black font-bold text-xl sm:text-3xl" href="/">
           Logo

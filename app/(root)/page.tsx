@@ -1,5 +1,7 @@
 import CardTitleSpot from "@/components/CardTitleSpot";
 import CardTitleVlog from "@/components/CardTitleVlog";
+import CardSection from "@/components/ui/CardSection";
+
 import HomeSlider from "@/components/ui/HomeSlider";
 import RoundImage from "@/components/ui/RoundImage";
 import React from "react";
@@ -12,8 +14,9 @@ const Home = () => {
       </div>
       <RoundImage />
       <CardTitleVlog />
-
+      <CardSection />
       <CardTitleSpot />
+      <CardSection />
     </section>
   );
 };

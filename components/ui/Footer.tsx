@@ -3,7 +3,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="relative w-full border border-gray-200 flex justify-center bg-black text-white">
+    <footer className="relative mt-20 w-full border border-gray-200 flex justify-center bg-black text-white">
       <div className="w-full mt-4 px-8  max-w-[1170px]">
         <div className="grid justify-between grid-cols-1 gap-4 md:grid-cols-2">
           <h5 className="block mb-6 font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-inherit">

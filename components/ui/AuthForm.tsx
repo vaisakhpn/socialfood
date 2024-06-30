@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import CustomInput from "../CustomInput";
 import Button from "./Button/Button";
+import { FcGoogle } from "react-icons/fc";
 
 interface AuthFormProps {
   type: string;
@@ -22,7 +23,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
           <p className="text-lg mt-3">Something about the website</p>
         </Link>
       </div>
-      <div className="flex flex-col  gap-1 md:gap-3 mt-10">
+      <div
+        className={`flex flex-col  gap-1 md:gap-3 ${
+          type === "sign-up" ? "mt-10" : "mt-28"
+        }`}
+      >
         <div className="border rounded-lg border-gray-300 bg-[#F4F4F4] max-w-[500px] max-h-[900px] ">
           <div className="p-5 pl-10 ">
             <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
@@ -54,8 +59,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     label="Confirm Password"
                   />
                 )}
-                <div className="w-full">
-                  <Button label="sign in" />
+                <div className="flex justify-between items-center w-9/12 pt-3">
+                  <FcGoogle className="text-3xl ml-10" />
+                  <Button
+                    label={type === "sign-in" ? "Sign In" : "Sign Up"}
+                    buttonColor={type === "sign-in" ? "secondary" : "primary"}
+                  />
                 </div>
               </form>
             </div>

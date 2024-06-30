@@ -16,7 +16,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       disabled={disabled}
-      className={`disabled:opacity-70 disabled:cursor-not-allowed p-2 text-16 text-white rounded-md hover:opacity-80 transition w-3/12 flex items-center justify-center gap-2  ${
+      className={`disabled:opacity-70 disabled:cursor-not-allowed p-2 text-16 text-white rounded-3xl hover:opacity-80 transition w-4/12 flex items-center justify-center gap-2  ${
         AVAILABLE_THEMES[buttonColor] || DEFAULT_BUTTON_COLOR
       }`}
       {...restProps}

@@ -10,7 +10,7 @@ const NavBarActionMenu = () => {
           </Link>
         </button>
         <button className="bg-black p-1 sm:p-2 px-2 sm:px-5 rounded-full items-center hover:bg-slate-700">
-          <Link className="text-white text-sm sm:text-lg" href={""}>
+          <Link className="text-white text-sm sm:text-lg" href="/sign-in">
             Sign in
           </Link>
         </button>

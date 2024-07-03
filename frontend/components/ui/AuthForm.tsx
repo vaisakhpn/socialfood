@@ -28,7 +28,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
           type === "sign-up" ? "mt-10" : "mt-28"
         }`}
       >
-        <div className="border rounded-lg border-gray-300 bg-[#F4F4F4] max-w-[500px] max-h-[900px] ">
+        <div className="border rounded-lg shadow-md border-gray-300 bg-[#F4F4F4] max-w-[500px] max-h-[900px] ">
           <div className="p-5 pl-10 ">
             <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
               {user
@@ -44,17 +44,31 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               <form className="space-y-5 ">
                 {type === "sign-up" && (
                   <>
-                    <CustomInput placeholder="Eg:Jhon759" label="User name" />
                     <CustomInput
+                      name="name"
+                      placeholder="Eg:Jhon759"
+                      label="User name"
+                    />
+                    <CustomInput
+                      name="phone"
                       placeholder="Eg:+91 5268745623"
                       label="Phone Number"
                     />
                   </>
                 )}
-                <CustomInput placeholder="jhon@gmail.com" label="Email" />
-                <CustomInput placeholder="password" label="Password" />
+                <CustomInput
+                  name="email"
+                  placeholder="jhon@gmail.com"
+                  label="Email"
+                />
+                <CustomInput
+                  name="password"
+                  placeholder="password"
+                  label="Password"
+                />
                 {type === "sign-up" && (
                   <CustomInput
+                    name="password"
                     placeholder="password"
                     label="Confirm Password"
                   />
@@ -67,6 +81,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                   />
                 </div>
               </form>
+              <footer className="flex w-full justify-start pl-16 pt-2 gap-1 ">
+                <p className="text-14 font-normal text-gray-600">
+                  {type === "sign-in"
+                    ? "Don't have an account?"
+                    : "Already have an account?"}
+                </p>
+                <Link
+                  href={type === "sign-in" ? "/sign-up" : "/sign-in"}
+                  className="form-link"
+                >
+                  {type === "sign-in" ? "Sign up" : "Sign in"}
+                </Link>
+              </footer>
             </div>
           </div>
         </div>

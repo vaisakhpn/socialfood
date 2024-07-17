@@ -1,20 +1,29 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import authRoute from "./routes/auth.route.js";
+import userRoutes from "./routes/user.route.js";
 import { connectDB } from "./config/db.js";
 
 const app = express();
+//middleware
+app.use(express.json());
+app.use(cors());
+app.use(cookieParser());
 
-app.listen(3001, () => {
-  console.log("server is running on port 3001");
-});
+//routes
+app.use("/backend/auth", authRoute);
+app.use("/backend/users", userRoutes);
 
+//default
 app.get("/", (req, res) => {
   res.send("API Working");
 });
 
-//middleware
-app.use(express.json());
-app.use(cors());
-
 //db connection
 connectDB();
+
+//start server
+app.listen(3001, () => {
+  console.log("server is running on port 3001");
+});

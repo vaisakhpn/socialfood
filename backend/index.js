@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.route.js";
 import commentRoutes from "./routes/comments.route.js";
+import channelRoutes from "./routes/channel.routes.js";
 import userRoutes from "./routes/user.route.js";
 import videoRoutes from "./routes/video.route.js";
 import { connectDB } from "./config/db.js";
@@ -17,6 +18,7 @@ app.use(cookieParser());
 app.use("/backend/auth", authRoute);
 app.use("/backend/users", userRoutes);
 app.use("/backend/videos", videoRoutes);
+app.use("/backend/channels", channelRoutes);
 app.use("/backend/comments", commentRoutes);
 
 //default

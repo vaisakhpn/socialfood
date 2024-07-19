@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    phonenumber: {
+    phoneNumber: {
       type: Number,
       required: true,
       unique: true,
@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+      default: "http://www.gravatar.com/avatar/?d=mp",
     },
     subscribers: {
       type: Number,
@@ -38,6 +39,11 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.statics.countChannels = async function (userId) {
+  const Channel = mongoose.model("Channel");
+  return await Channel.countDocuments({ userId });
+};
 
 const User = mongoose.model.User || mongoose.model("User", userSchema);
 export default User;

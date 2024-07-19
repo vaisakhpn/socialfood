@@ -23,10 +23,10 @@ export const signup = async (req, res, next) => {
 };
 
 export const signIn = async (req, res, next) => {
-  const { email, phonenumber, password } = req.body;
+  const { email, phoneNumber, password } = req.body;
   try {
     const validUser = await User.findOne({
-      $or: [{ email }, { phonenumber }],
+      $or: [{ email }, { phoneNumber }],
     });
     if (!validUser) return next(errorHandler(404, "user not found"));
     const validPassword = await bcrypt.compare(password, validUser.password);

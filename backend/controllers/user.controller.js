@@ -2,6 +2,7 @@ import { errorHandler } from "../middleware/error.js";
 import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 import Video from "../models/video.model.js";
+import Channel from "../models/channel.model.js";
 
 export const test = (req, res) => {
   res.json({
@@ -60,31 +61,49 @@ export const getUser = async (req, res, next) => {
   }
 };
 export const subscribe = async (req, res, next) => {
+  const channelId = req.params.channelId;
   try {
-    await User.findByIdAndUpdate(req.user.id, {
-      $push: { subscribedUsers: req.params.id },
-    });
-    await User.findByIdAndUpdate(req.params.id, {
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      return next(errorHandler(404, "Channel not found!"));
+    }
+
+    await Channel.findByIdAndUpdate(channelId, {
       $inc: { subscribers: 1 },
     });
-    res.status(200).json("Subscription successfull.");
+
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: { subscribedChannel: channelId },
+    });
+
+    res.status(200).json("Subscription successful.");
   } catch (error) {
     next(error);
   }
 };
+
 export const unsubscribe = async (req, res, next) => {
+  const channelId = req.params.channelId;
   try {
-    await User.findByIdAndUpdate(req.user.id, {
-      $pull: { subscribedUsers: req.params.id },
-    });
-    await User.findByIdAndUpdate(req.params.id, {
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      return next(errorHandler(404, "Channel not found!"));
+    }
+
+    await Channel.findByIdAndUpdate(channelId, {
       $inc: { subscribers: -1 },
     });
-    res.status(200).json("Unsubscription successfull.");
+
+    await User.findByIdAndUpdate(req.user.id, {
+      $pull: { subscribedChannel: channelId },
+    });
+
+    res.status(200).json("Unsubscription successful.");
   } catch (error) {
     next(error);
   }
 };
+
 export const like = async (req, res, next) => {
   const id = req.user.id;
   const videoId = req.params.videoId;

@@ -25,11 +25,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "http://www.gravatar.com/avatar/?d=mp",
     },
-    subscribers: {
-      type: Number,
-      default: 0,
-    },
-    subscribedUsers: {
+    subscribedChannel: {
       type: [String],
     },
     fromGoogle: {

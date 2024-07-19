@@ -14,19 +14,13 @@ export const updateUser = async (req, res, next) => {
     return next(errorHandler(401, "You can only update your own account"));
   try {
     if (req.body.password) {
-      req.body.password = bcrypt.hash(req.body.password, 10);
+      req.body.password = await bcrypt.hash(req.body.password, 10);
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
-        $set: {
-          username: req.body.username,
-          email: req.body.email,
-          phonenumber: req.body.phonenumber,
-          password: req.body.password,
-          avatar: req.body.avatar,
-        },
+        $set: req.body,
       },
       { new: true }
     );
@@ -53,7 +47,14 @@ export const deleteUser = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
-    res.status(200).json(user);
+    if (!user) return next(errorHandler(404, "User not found!"));
+
+    const channelCount = await User.countChannels(req.user.id);
+
+    res.status(200).json({
+      ...user._doc,
+      channelCount,
+    });
   } catch (error) {
     next(error);
   }

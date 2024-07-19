@@ -1,16 +1,48 @@
 import { errorHandler } from "../middleware/error.js";
 import User from "../models/user.model.js";
+import Channel from "../models/channel.model.js";
 import Video from "../models/video.model.js";
 
 export const addVideo = async (req, res, next) => {
-  const newVideo = new Video({ userId: req.user.id, ...req.body });
+  const { channelId } = req.params; // Ensure channelId is accessed correctly
+  const { title, desc, imgUrl, videoUrl, locationUrl, locationName, tags } =
+    req.body;
+
   try {
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      console.log(`Channel not found: ${channelId}`); // Debugging line
+      return next(errorHandler(404, "Channel not found!"));
+    }
+
+    if (channel.userId.toString() !== req.user.id) {
+      return next(
+        errorHandler(403, "You can only upload videos to your own channel!")
+      );
+    }
+
+    const newVideo = new Video({
+      userId: req.user.id,
+      channelId,
+      title,
+      desc,
+      imgUrl,
+      videoUrl,
+      locationUrl,
+      locationName,
+      tags,
+      views: 0,
+      likes: [],
+      dislikes: [],
+    });
+
     const savedVideo = await newVideo.save();
-    res.status(200).json(savedVideo);
+    res.status(201).json(savedVideo);
   } catch (error) {
     next(error);
   }
 };
+
 export const updateVideo = async (req, res, next) => {
   try {
     const video = await Video.findById(req.params.id);

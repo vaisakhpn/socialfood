@@ -6,6 +6,10 @@ const videoSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    channelId: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,

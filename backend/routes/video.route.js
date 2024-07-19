@@ -16,7 +16,7 @@ import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/", verifyToken, addVideo);
+router.post("/:channelId", verifyToken, addVideo);
 router.put("/:id", verifyToken, updateVideo);
 router.delete("/:id", verifyToken, deleteVideo);
 router.get("/find/:id", getVideo);

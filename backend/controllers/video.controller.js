@@ -4,14 +4,13 @@ import Channel from "../models/channel.model.js";
 import Video from "../models/video.model.js";
 
 export const addVideo = async (req, res, next) => {
-  const { channelId } = req.params; // Ensure channelId is accessed correctly
+  const { channelId } = req.params;
   const { title, desc, imgUrl, videoUrl, locationUrl, locationName, tags } =
     req.body;
 
   try {
     const channel = await Channel.findById(channelId);
     if (!channel) {
-      console.log(`Channel not found: ${channelId}`); // Debugging line
       return next(errorHandler(404, "Channel not found!"));
     }
 

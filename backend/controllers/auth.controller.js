@@ -5,20 +5,21 @@ import bcrypt from "bcrypt";
 
 export const signup = async (req, res, next) => {
   const { username, email, phoneNumber, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = new User({
-    username,
-    email,
-    phoneNumber,
-    password: hashedPassword,
-  });
-
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      username,
+      email,
+      phoneNumber,
+      password: hashedPassword,
+    });
+
     await newUser.save();
-    res.status(201).json("User created successfully");
+    console.log("User created successfully:", newUser);
+    return res.status(201).json("User created successfully");
   } catch (error) {
+    console.error("Failed to create user:", error);
     next(error);
-    res.status(500).json("Failed to create user");
   }
 };
 
@@ -28,28 +29,35 @@ export const signIn = async (req, res, next) => {
     const validUser = await User.findOne({
       $or: [{ email }, { phoneNumber }],
     });
-    if (!validUser) return next(errorHandler(404, "user not found"));
+    if (!validUser) {
+      return next(errorHandler(404, "User not found"));
+    }
+
     const validPassword = await bcrypt.compare(password, validUser.password);
-    if (!validPassword) return next(errorHandler(401, "invalid password"));
+    if (!validPassword) {
+      return next(errorHandler(401, "Invalid password"));
+    }
 
     const age = 1000 * 60 * 60 * 24 * 2;
-
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
       expiresIn: age,
     });
-    const { password: pass, ...rest } = validUser._doc;
 
-    res
+    const { password: pass, ...rest } = validUser._doc;
+    console.log("User signed in successfully:", rest);
+
+    return res
       .cookie("access_token", token, { httpOnly: true, maxAge: age })
       .status(200)
       .json(rest);
   } catch (error) {
+    console.error("Failed to login:", error);
     next(error);
-    res.status(500).json({ message: "Failed to login!" });
   }
 };
+
 export const signOut = (req, res) => {
-  res
+  return res
     .clearCookie("access_token")
     .status(200)
     .json({ message: "Logout Successful" });

@@ -7,8 +7,10 @@ import channelRoutes from "./routes/channel.routes.js";
 import userRoutes from "./routes/user.route.js";
 import videoRoutes from "./routes/video.route.js";
 import { connectDB } from "./config/db.js";
+import { handleError } from "./middleware/error.js";
 
 const app = express();
+
 //middleware
 app.use(express.json());
 app.use(cors());
@@ -25,6 +27,9 @@ app.use("/backend/comments", commentRoutes);
 app.get("/", (req, res) => {
   res.send("API Working");
 });
+
+//error handler
+app.use(handleError);
 
 //db connection
 connectDB();

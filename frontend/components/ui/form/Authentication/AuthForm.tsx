@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomInput from "../CustomInput";
@@ -8,19 +8,14 @@ import Button from "../../Button/Button";
 import { FcGoogle } from "react-icons/fc";
 import schema from "./constant";
 import { z } from "zod";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useAuth } from "../../../../app/api/authentication";
 
 interface AuthFormProps {
   type: string;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const router = useRouter();
-
+  const { onSubmit, error, loading, user } = useAuth(type);
   const formSchema = schema(type);
 
   const methods = useForm<z.infer<typeof formSchema>>({
@@ -35,45 +30,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     mode: "onBlur",
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setLoading(true);
-    setError("");
-    try {
-      const url =
-        type === "sign-up"
-          ? `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`
-          : `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`;
-
-      const payload =
-        type === "sign-up"
-          ? {
-              username: data.username,
-              phoneNumber: data.phoneNumber,
-              email: data.email,
-              password: data.password,
-            }
-          : {
-              email: data.email,
-              password: data.password,
-            };
-
-      const response = await axios.post(url, payload);
-
-      if (type === "sign-up") {
-        router.push("/sign-in");
-      } else if (type === "sign-in") {
-        setUser(response.data);
-        console.log(response.data);
-        router.push("/");
-      }
-    } catch (error) {
-      setError("An error occurred. Please try again.");
-      console.error("Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <section className="grid grid-cols-2 w-full min-h-screen max-w-7xl mx-auto">
       <div className="flex flex-col items-start justify-center gap-5 md:gap-8 w-full">
@@ -86,7 +42,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
       </div>
       <div
         className={`flex flex-col gap-1 md:gap-3 ${
-          type === "sign-up" ? "mt-10" : "mt-28"
+          type === "sign-up" ? "mt-4" : "mt-28"
         }`}
       >
         <div className="border rounded-lg shadow-md border-gray-300 bg-[#F4F4F4] max-w-[500px] max-h-[900px]">
@@ -159,7 +115,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                       disabled={loading}
                     />
                   </div>
-                  {error && <p className="text-red-500">{error}</p>}
+                  {error && <p className="text-red-500 ">{error}</p>}
                 </form>
               </FormProvider>
               <footer className="flex w-full justify-start pl-16 pt-2 gap-1">

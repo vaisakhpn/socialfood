@@ -56,6 +56,36 @@ export const signIn = async (req, res, next) => {
   }
 };
 
+export const check = async (req, res) => {
+  const { username, email, phoneNumber } = req.body;
+
+  if (!username && !email && !phoneNumber) {
+    return res.status(400).json({ message: "At least one field is required" });
+  }
+
+  try {
+    const existingUser = await User.findOne({
+      $or: [{ username }, { phoneNumber }, { email }],
+    });
+
+    if (existingUser) {
+      if (existingUser.username === username) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+      if (existingUser.phoneNumber === phoneNumber) {
+        return res.status(400).json({ message: "Phone Number already exists" });
+      }
+      if (existingUser.email === email) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+    }
+    res.status(200).json({ message: "Available" });
+  } catch (error) {
+    console.error("Failed to check:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const signOut = (req, res) => {
   return res
     .clearCookie("access_token")

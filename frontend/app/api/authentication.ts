@@ -78,8 +78,12 @@ export const useAuth = (type: string) => {
         setUser(response.data);
         router.push("/");
       }
-    } catch (error) {
-      setError("An error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("An error occurred. Please try again.");
+      }
       console.error("Error:", error);
     } finally {
       setLoading(false);

@@ -68,7 +68,9 @@ export const useAuth = (type: string) => {
               password: data.password,
             };
 
-      const response = await axios.post(url, payload);
+      const response = await axios.post(url, payload, {
+        withCredentials: true,
+      });
 
       if (type === "sign-up") {
         router.push("/sign-in");

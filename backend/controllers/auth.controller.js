@@ -47,7 +47,11 @@ export const signIn = async (req, res, next) => {
     console.log("User signed in successfully:", rest);
 
     res
-      .cookie("access_token", token, { httpOnly: true, maxAge: age })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        sameSite: "Strict",
+        maxAge: age,
+      })
       .status(200)
       .json(rest);
   } catch (error) {

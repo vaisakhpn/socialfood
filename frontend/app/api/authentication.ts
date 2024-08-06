@@ -1,12 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "@/redux/user/userSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 
 export const useAuth = (type: string) => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
 
   const check = async (data: {
     username: string;
@@ -30,13 +36,11 @@ export const useAuth = (type: string) => {
   };
 
   const onSubmit = async (data: any) => {
-    setLoading(true);
-    setError("");
+    dispatch(signInStart());
     try {
       if (type === "sign-up") {
         if (!data.username || !data.phoneNumber || !data.email) {
-          setError("Username and email and phoneNumber are required.");
-          setLoading(false);
+          dispatch(signInFailure("Please fill in all fields."));
           return;
         }
 
@@ -46,10 +50,11 @@ export const useAuth = (type: string) => {
           phoneNumber: data.phoneNumber,
         });
         if (!isAvailable) {
-          setLoading(false);
+          dispatch(signInFailure("Some fields are already exist."));
           return;
         }
       }
+
       const url =
         type === "sign-up"
           ? `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`
@@ -75,20 +80,18 @@ export const useAuth = (type: string) => {
       if (type === "sign-up") {
         router.push("/sign-in");
       } else if (type === "sign-in") {
-        setUser(response.data);
+        dispatch(signInSuccess(response.data));
         router.push("/");
       }
     } catch (error: any) {
       if (error.response && error.response.data.message) {
-        setError(error.response.data.message);
+        dispatch(signInFailure(error.response.data.message));
       } else {
-        setError("An error occurred. Please try again.");
+        dispatch(signInFailure("An error occurred. Please try again."));
       }
       console.error("Error:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  return { onSubmit, error, loading, user };
+  return { onSubmit, error };
 };

@@ -8,7 +8,7 @@ import Button from "../../Button/Button";
 import { FcGoogle } from "react-icons/fc";
 import schema from "./constant";
 import { z } from "zod";
-import { useAuth } from "../../../../app/api/authentication";
+import { useAuth } from "./authentication";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
@@ -54,11 +54,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         <div className="border rounded-lg shadow-md border-gray-300 bg-[#F4F4F4] max-w-[500px] max-h-[900px]">
           <div className="p-5 pl-10">
             <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
-              {currentUser
-                ? "Already Have an Account"
-                : type === "sign-in"
-                ? "Sign In"
-                : "Sign Up"}
+              {!currentUser ? "" : type === "sign-in" ? "Sign In" : "Sign Up"}
               <p className="text-16 font-normal text-gray-600">
                 {!currentUser && "Please enter your details"}
               </p>

@@ -5,12 +5,12 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
+  resetAuthState,
 } from "@/redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 
 export const useAuth = (type: string) => {
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -19,6 +19,7 @@ export const useAuth = (type: string) => {
     email: string;
     phoneNumber: string;
   }) => {
+    dispatch(signInStart());
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/check`,
@@ -27,9 +28,9 @@ export const useAuth = (type: string) => {
       return response.data.message === "Available";
     } catch (error: any) {
       if (error.response && error.response.data.message) {
-        setError(error.response.data.message);
+        dispatch(signInFailure(error.response.data.message));
       } else {
-        setError("An error occurred. Please try again.");
+        dispatch(signInFailure("An error occurred. Please try again."));
       }
       return false;
     }
@@ -78,9 +79,11 @@ export const useAuth = (type: string) => {
       });
 
       if (type === "sign-up") {
+        dispatch(resetAuthState());
         router.push("/sign-in");
       } else if (type === "sign-in") {
         dispatch(signInSuccess(response.data));
+        dispatch(resetAuthState());
         router.push("/");
       }
     } catch (error: any) {
@@ -93,5 +96,5 @@ export const useAuth = (type: string) => {
     }
   };
 
-  return { onSubmit, error };
+  return { onSubmit };
 };

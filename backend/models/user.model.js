@@ -23,7 +23,8 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: "http://www.gravatar.com/avatar/?d=mp",
+      default:
+        "https://cdn3.iconfinder.com/data/icons/essential-rounded/64/Rounded-31-512.png",
     },
     subscribedChannel: {
       type: [String],
